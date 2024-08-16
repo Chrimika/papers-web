@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter un Auteur</title>
+    <!-- Material Design CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <h3 class="center-align">Ajouter un Auteur</h3>
+        <form id="authorForm">
+            <div class="row">
+                <div class="col s12 m6">
+
+                    <div class="input-field">
+                        <input id="name" type="text" class="validate">
+                        <label for="name">Nom et Prénom</label>
+                    </div>
+                    <div class="input-field">
+                        <input id="address" type="text" class="validate">
+                        <label for="address">Adresse</label>
+                    </div>
+                    <div class="input-field">
+                        <input id="job" type="text" class="validate">
+                        <label for="job">Métier</label>
+                    </div>
+                    <div class="input-field">
+                        <input id="nationality" type="text" class="validate">
+                        <label for="nationality">Nationalité</label>
+                    </div>
+                    <div class="input-field">
+                        <input id="paymentRef" type="text" class="validate">
+                        <label for="paymentRef">Référence de Paiement</label>
+                    </div>
+                    <div class="input-field">
+                        <input id="phone" type="text" class="validate">
+                        <label for="phone">Téléphone</label>
+                    </div>
+                    
+                    <div class="file-field input-field">
+                        <div class="btn">
+                            <span>Photo</span>
+                            <input id="authorPhoto" type="file" accept="image/*">
+                        </div>
+                        <div class="file-path-wrapper">
+                            <input class="file-path validate" type="text" placeholder="Télécharger la photo de l'auteur">
+                        </div>
+                    </div>
+                    <div class="input-field">
+                        <textarea id="bio" class="materialize-textarea"></textarea>
+                        <label for="bio">Biographie</label>
+                    </div>
+                </div>
+            </div>
+            <div class="center-align">
+                <button class="btn waves-effect waves-light" type="submit">Ajouter l'Auteur</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Materialize JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyADLk-YUqWpKbyCSsXxk-W5RKl0_pKDy_A",
+            authDomain: "paper-d9ad5.firebaseapp.com",
+            projectId: "paper-d9ad5",
+            storageBucket: "paper-d9ad5.appspot.com",
+            messagingSenderId: "966837266031",
+            appId: "1:966837266031:web:cacecb421f912557210f9a",
+            measurementId: "G-6NYLXR467G"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        document.getElementById('authorForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const address = document.getElementById('address').value;
+            const job = document.getElementById('job').value;
+            const nationality = document.getElementById('nationality').value;
+            const paymentRef = document.getElementById('paymentRef').value;
+            const phone = document.getElementById('phone').value;
+            const name = document.getElementById('name').value;
+            const bio = document.getElementById('bio').value;
+            const photo = document.getElementById('authorPhoto').files[0];
+
+            if (address && job && nationality && paymentRef && phone && name && bio && photo) {
+                const photoRef = ref(storage, `auteurs/${photo.name}`);
+
+                // Convert photo to Blob and upload
+                const photoData = await photo.arrayBuffer();
+                const photoBlob = new Blob([photoData], { type: photo.type });
+                const uploadTask = uploadBytesResumable(photoRef, photoBlob);
+
+                uploadTask.on('state_changed', 
+                    (snapshot) => {
+                        // Observe state change, progress, completion, and errors
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        console.log('Upload is ' + progress + '% done');
+                    }, 
+                    (error) => {
+                        console.error('Error lors de l\'upload de la photo:', error);
+                    }, 
+                    async () => {
+                        const photoUrl = await getDownloadURL(uploadTask.snapshot.ref);
+
+                        const authorData = {
+                            adresse: address,
+                            masterclass: '',
+                            metier: job,
+                            nationalite: nationality,
+                            nbrLivres: 0,
+                            nomPrenom: name,
+                            refPayement: paymentRef,
+                            tel: phone,
+                            bio: bio,
+                            photo: photoUrl
+                        };
+
+                        try {
+                            await setDoc(doc(db, 'auteurs', name), authorData);
+                            alert('Auteur ajouté avec succès !');
+                        } catch (error) {
+                            console.error('Erreur lors de l\'ajout de l\'auteur à Firestore :', error);
+                        }
+                    }
+                );
+            } else {
+                alert('Veuillez remplir tous les champs requis.');
+            }
+        });
+    </script>
+</body>
+
+</html>

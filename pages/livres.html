@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter un Livre</title>
+    <!-- Material Design CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h3 class="center-align">Ajouter un Livre</h3>
+        <form id="bookForm">
+            <div class="row">
+                <div class="col s12 m6">
+                    <div class="input-field">
+                        <input id="name" type="text" class="validate">
+                        <label for="name">Nom du Livre</label>
+                    </div>
+                    <div class="input-field">
+                        <input id="auteur" type="text" class="validate">
+                        <label for="auteur">Auteur</label>
+                    </div>
+                    <div class="input-field">
+                        <input id="prix" type="number" class="validate">
+                        <label for="prix">Prix</label>
+                    </div>
+                    <div class="input-field">
+                        <textarea id="summary" class="materialize-textarea"></textarea>
+                        <label for="summary">Résumé</label>
+                    </div>
+                    <div class="input-field">
+                        <p>Genre:</p>
+                        <select id="genre" class="browser-default">
+                            <option value="" disabled selected>Choisir le genre</option>
+                            <option value="Arts & Photography">Arts & Photography</option>
+                            <option value="Buisiness & Money">Buisiness & Money</option>
+                            <option value="Comics, Manga & Graphic Novels">Comics, Manga & Graphic Novels</option>
+                            <option value="Cookbooks, Food & Wine">Cookbooks, Food & Wine</option>
+                            <option value="Education & Teaching">Education & Teaching</option>
+                            <option value="Foreign Languages">Foreign Languages</option>
+                            <option value="History">History</option>
+                            <option value="Law">Law</option>
+                            <option value="Literature & Fiction">Literature & Fiction</option>
+                            <option value="Mystery, Thriller & Suspense">Mystery, Thriller & Suspense</option>
+                            <option value="Parenting & Relationships">Parenting & Relationships</option>
+                            <option value="Reference">Reference</option>
+                            <option value="Romance">Romance</option>
+                            <option value="Science Fiction & Fantasy">Science Fiction & Fantasy</option>
+                            <option value="Sports & Outdoors">Sports & Outdoors</option>
+                            <option value="Travel">Travel</option>
+                            <option value="Biographies & Memories">Biographies & Memories</option>
+                            <option value="Childrens eBooks">Childrens eBooks</option>
+                            <option value="Computers & Technology">Computers & Technology</option>
+                            <option value="Crafts, Hobbies & Home">Crafts, Hobbies & Home</option>
+                            <option value="Engineering & Transportation">Engineering & Transportation</option>
+                            <option value="Health, Fitness & Dieting">Health, Fitness & Dieting</option>
+                            <option value="Humor & Entertainment">Humor & Entertainment</option>
+                            <option value="Medical ebooks">Medical ebooks</option>
+                            <option value="Nonfiction">Nonfiction</option>
+                            <option value="Politics & Social Sciences">Politics & Social Sciences</option>
+                            <option value="Religion & Spirituality">Religion & Spirituality</option>
+                            <option value="Science & Math">Science & Math</option>
+                            <option value="Self-Help">Self-Help</option>
+                            <option value="Teen & Young Adult">Teen & Young Adult</option>
+                        </select>
+                    </div>
+                    
+                    <p>
+                        <label>
+                            <input name="is_serie" type="radio" value="true" />
+                            <span>Oui, c'est une série</span>
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            <input name="is_serie" type="radio" value="false" />
+                            <span>Non, ce n'est pas une série</span>
+                        </label>
+                    </p>
+                </div>
+                <div class="col s12 m6">
+                    <div class="file-field input-field">
+                        <div class="btn">
+                            <span>Couverture</span>
+                            <input id="coverImage" type="file" accept="image/*">
+                        </div>
+                        <div class="file-path-wrapper">
+                            <input class="file-path validate" type="text" placeholder="Télécharger l'image de couverture">
+                        </div>
+                    </div>
+                    <div class="file-field input-field">
+                        <div class="btn">
+                            <span>PDF du Livre</span>
+                            <input id="pdfFile" type="file" accept="application/pdf">
+                        </div>
+                        <div class="file-path-wrapper">
+                            <input class="file-path validate" type="text" placeholder="Télécharger le fichier PDF">
+                        </div>
+                    </div>
+                    <div class="input-field">
+                        <input id="annee" type="number" class="validate">
+                        <label for="annee">Année</label>
+                    </div>
+                    <div class="input-field">
+                        <input id="edition" type="text" class="validate">
+                        <label for="edition">Édition</label>
+                    </div>
+                    <div class="input-field">
+                        <input id="format" type="text" class="validate">
+                        <label for="format">Format</label>
+                    </div>
+                    <div class="input-field">
+                        <input id="nbr_pages" type="number" class="validate">
+                        <label for="nbr_pages">Nombre de Pages</label>
+                    </div>
+                    <div class="input-field">
+                        <input id="small_summary" type="text" class="validate">
+                        <label for="small_summary">Petit Résumé</label>
+                    </div>
+                </div>
+            </div>
+            <div class="center-align">
+                <button class="btn waves-effect waves-light" type="submit">Publier</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Materialize JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+        import { getStorage, ref, uploadString, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js";
+        import {uploadBytesResumable } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyADLk-YUqWpKbyCSsXxk-W5RKl0_pKDy_A",
+            authDomain: "paper-d9ad5.firebaseapp.com",
+            projectId: "paper-d9ad5",
+            storageBucket: "paper-d9ad5.appspot.com",
+            messagingSenderId: "966837266031",
+            appId: "1:966837266031:web:cacecb421f912557210f9a",
+            measurementId: "G-6NYLXR467G"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        document.getElementById('bookForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const auteur = document.getElementById('auteur').value;
+            const prix = document.getElementById('prix').value;
+            const genre = document.getElementById('genre').value;
+            const summary = document.getElementById('summary').value;
+            const annee = document.getElementById('annee').value;
+            const edition = document.getElementById('edition').value;
+            const format = document.getElementById('format').value;
+            const nbr_pages = document.getElementById('nbr_pages').value;
+            const small_summary = document.getElementById('small_summary').value;
+            const is_serie = document.querySelector('input[name="is_serie"]:checked').value === 'true';
+
+            const coverImage = document.getElementById('coverImage').files[0];
+            const pdfFile = document.getElementById('pdfFile').files[0];
+
+            if (coverImage && pdfFile && name && auteur && prix && genre) {
+                const coverRef = ref(storage, `covers/${coverImage.name}`);
+                const pdfRef = ref(storage, `books/${pdfFile.name}`);
+
+                const coverData = await coverImage.arrayBuffer();
+                await uploadString(coverRef, btoa(String.fromCharCode(...new Uint8Array(coverData))), 'base64', { contentType: coverImage.type });
+
+                const pdfData = await pdfFile.arrayBuffer();
+                const blob = new Blob([pdfData], { type: pdfFile.type });
+                await uploadBytesResumable(pdfRef, blob);
+
+                const coverUrl = await getDownloadURL(coverRef);
+                const pdfUrl = await getDownloadURL(pdfRef);
+
+                const bookData = {
+                    name: name,
+                    hauteur: auteur,
+                    genre: genre,
+                    price: prix,
+                    pdfUrl: pdfUrl,
+                    coverUrl: coverUrl,
+                    summary: summary,
+                    small_summary: small_summary,
+                    dateAdded: new Date(),
+                    is_serie: is_serie,
+                    nbr_lecture: 0,
+                    nbr_user_notes: 0,
+                    nbr_vues: 0,
+                    note: '',
+                    revues: [],
+                    caracteristiques: {
+                        annee: annee,
+                        edition: edition,
+                        nbr_pages: nbr_pages,
+                        format: format
+                    }
+                };
+
+                try {
+                    await setDoc(doc(db, 'livres', name), bookData);
+                    alert('Livre ajouté avec succès !');
+                } catch (error) {
+                    console.error('Erreur lors de l\'ajout du livre à Firestore :', error);
+                }
+            } else {
+                alert('Veuillez remplir tous les champs requis.');
+            }
+        });
+    </script>
+</body>
+</html>
